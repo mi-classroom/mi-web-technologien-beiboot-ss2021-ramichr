@@ -1,0 +1,26 @@
+{
+  "name": "mi-web-technologien-beiboot-ss2021-ramichr",
+  "version": "1.0.0",
+  "description": "Zum Modul Web Technologien gibt es ein begleitendes Projekt. Im Rahmen dieses Projekts werden wir von Veranstaltung zu Veranstaltung ein Projekt sukzessive weiter entwickeln und uns im Rahmen der Veranstaltung den Fortschritt anschauen, Code Reviews machen und Entwicklungsschritte vorstellen und diskutieren.",
+  "main": "index.js",
+  "scripts": {
+    "setup-server":  "cd ./server && npm install",
+    "setup-client":  "cd ./client && npm install",
+    "setup": "concurrently \"npm run setup-server\" \"npm run setup-client\"",    
+    "server": "cd ./server && npm run start",
+    "client": "cd ./client && npm run dev",
+    "beiboot": "concurrently \"npm run server\" \"npm run client\"" 
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2021-ramichr.git"
+  },
+  "keywords": [],
+  "author": "Rami Cheikh Rouhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2021-ramichr/issues"
+  },
+  "homepage": "https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2021-ramichr#readme"
+}
