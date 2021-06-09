@@ -3,9 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const exifr = require("exifr");
-const stream = require("stream");
 const fs = require("fs");
-
 
 
 const FILE_DIRECTORY = process.env.FILE_DIRECTORY || "../data";
@@ -31,7 +29,6 @@ app.post("/image", async (req, res) => {
 app.get("/datas", async (req, res) => {
   res.send(getStructure(FILE_DIRECTORY));
 });
-
 
 function getStructure(initpath) {
   const structure = [];

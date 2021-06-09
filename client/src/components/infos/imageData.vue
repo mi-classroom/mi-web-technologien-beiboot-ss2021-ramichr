@@ -1,6 +1,6 @@
 <template>
   <div class="px-5 mt-3">
-    <div class="rounded-xl overflow-hidden shadow-2xl">
+    <div class="border border-gray-500 rounded-xl overflow-hidden shadow-2xl">
       <div v-for="(item, key) in imagedata.data" class="px-6 py-1 bg-blue-100">
         <li>
           <span class="font-bold"> {{ key }}:</span>
@@ -35,6 +35,9 @@ export default {
         data: { filepath: this.path },
       }).then((response) => {this.imagedata = response.data;});
     },
+  },
+  created() {
+    this.getData();
   },
 };
 </script>

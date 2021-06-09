@@ -38,7 +38,11 @@
         .then((response) => {this.image = 'data:image/*;base64,' + response.data});
       },
     },
+    created() {
+      this.getImage();
   }
+  }
+
 </script>
 
 <style>

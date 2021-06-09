@@ -1,24 +1,24 @@
 <template>
   <div>
     <ul>
-      <li v-for="item in tree" class="pt-2">
-        <folder v-if="item.type == 'directory'" :key="item.path" :folderprops="item" @file-clicked="fileClicked"/>
-        <file v-else :fileprops="item" :key="item.path" @file-clicked="fileClicked"></file>
+      <li v-for="item in tree" class="pt-3 pb-3">
+        <Folder v-if="item.type == 'directory'" :key="item.path" :folderprops="item" @file-clicked="fileClicked"/>
+        <File v-else :fileprops="item" :key="item.path" @file-clicked="fileClicked"></file>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-  import file from '../directories/file.vue'
-  import folder from '../directories/folder.vue'
+  import File from './File.vue'
+  import Folder from './Folder.vue'
 
   export default {
-    name: "datas",
+    name: "Datas",
     components:
     {
-      folder,
-      file
+      Folder,
+      File
     },
     data(){
       return {

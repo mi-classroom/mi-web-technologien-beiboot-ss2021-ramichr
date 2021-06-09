@@ -5,23 +5,23 @@
       {{ folderprops.name }}
     </button>
     <ul>
-      <li  v-for="item in folderprops.includes"  class="pt-2" :class="{ hidden : !active }">
-        <file v-if="item.type == 'file'"  :fileprops="item" :key="item.path" @file-clicked="fileClicked" />
-        <folder v-else :folderprops="item" :key="item.path" @file-clicked="fileClicked"/>
+      <li v-for="item in folderprops.includes"  class="pt-2" :class="{ hidden : !active }">
+        <File v-if="item.type == 'file'"  :fileprops="item" :key="item.path" @file-clicked="fileClicked" />
+        <Folder v-else :folderprops="item" :key="item.path" @file-clicked="fileClicked"/>
       </li>
     </ul>
   </span>
 </template>
 
 <script>
-  import file from "./file.vue";
+  import File from "./file.vue";
   import { FolderIcon } from '@heroicons/vue/solid'
 
   export default {
     name: "folder",
     components:
     {
-      file,
+      File,
       FolderIcon,
     },
     data(){

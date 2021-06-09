@@ -1,28 +1,41 @@
 <template >
   <div class="h-screen font-body bg-white overflow-auto">
-    <header class="fixed inset-x-0 top-0">
-      <h1 class="py-4 text-2xl font-head font-bold text-center uppercase bg-green-800 shadow-xl text-white">
+    <header class="fixed inset-x-0 top-0 bg-green-800 shadow-xl">
+      <h1 class="py-4 text-2xl font-head font-bold uppercase ml-9 text-white text-center">
         _Beiboot Metadata_
       </h1>
     </header>
 
     <main class="grid grid-cols-4 px-4 mt-20">
-      <div>
-        <div class="bg-yellow-200 rounded-xl mt-3 shadow-2xl text-xs">
-          <datas class="col-span-1" @file-clicked="fileClicked"></datas>
+      <div class="col-span-1">
+        <div class="absolute w-1/4 left-2 top-20">
+          <div class="relative mb-6 ml-2 text-sm">
+              <div class="absolute mt-3 inset-y-0 left-0 flex items-center">
+                  <SearchIcon class="w-6 h-6 ml-2 pointer-events-none text-gray-400"/>
+              </div>
+              <input 
+                  type="search" 
+                  v-model="query"  
+                  class="w-full border border-gray-500 bg-gray-200 shadow-md mt-3 px-3 py-1 pl-9 rounded-full focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 placeholder-gray-500" 
+                  placeholder="Search..." 
+              />
+          </div>
         </div>
-      </div>      
+        <SearchOutput class="border border-gray-500 bg-yellow-200 rounded-xl mt-16 shadow-2xl text-xs" @file-clicked="fileClicked" :performSearch="query" />
+      </div>
+
+
       <div class="col-span-3" >
         <div class="grid h-full grid-cols-3">
             <div v-if="imageName != ''" class="col-span-1 ml-5 mt-3">
-              <div  class="text-center bg-red-300 rounded-xl shadow-2xl">
+              <div  class="border border-gray-500 text-center bg-red-300 rounded-xl shadow-2xl">
                 <span class="font-bold text-sm italic underline">
                     {{imageName.slice(imageName.lastIndexOf("/") + 1)}} 
                 </span>
-                <imageView v-if="imageName != ''" class="mr-5 ml-4 mt-2 py-1 pl-1 pb-2 rounded-xl overflow-hidden" :path="imageName"></imageView>
+                <ImageView v-if="imageName != ''" class="mr-5 ml-4 mt-2 py-1 pl-1 pb-2 rounded-xl overflow-hidden" :path="imageName"></imageView>
               </div>          
             </div>
-          <imageData v-if="imageName != ''" class="col-span-2 text-sm" :path="imageName"></imageData>
+          <ImageData v-if="imageName != ''" class="col-span-2 text-sm" :path="imageName"></imageData>
         </div>
       </div>
     </main>
@@ -30,25 +43,28 @@
 </template>
 
 <script>
-import datas from './components/directories/datas.vue'
-import imageView from './components/infos/imageView.vue'
-import imageData from './components/infos/imageData.vue'
+import { SearchIcon } from '@heroicons/vue/outline'
+import ImageView from './components/infos/ImageView.vue'
+import ImageData from './components/infos/ImageData.vue'
+import SearchOutput from './components/search/SearchOutput.vue'
 
 export default {
   components: {
-    datas,
-    imageView,
-    imageData
+    SearchIcon,
+    ImageView,
+    ImageData,
+    SearchOutput,
   },
   data(){
     return {
-      imageName: ""
+      imageName: "",
+      query: "",
     }
   },
   methods:{
     fileClicked(path){
       this.imageName = path
-    }
+    },
   }
   }
 </script>
