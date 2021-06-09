@@ -9,7 +9,7 @@
     <main class="grid grid-cols-4 px-4 mt-20">
       <div class="col-span-1">
         <div class="absolute w-1/4 left-2 top-20">
-          <div class="relative mb-6 ml-2 text-sm">
+          <div class="relative mb-6 ml-2 mr-1 text-sm">
               <div class="absolute mt-3 inset-y-0 left-0 flex items-center">
                   <SearchIcon class="w-6 h-6 ml-2 pointer-events-none text-gray-400"/>
               </div>
@@ -26,9 +26,9 @@
 
 
       <div class="col-span-3" >
-        <div class="grid h-full grid-cols-3">
+        <div class="fixed grid h-full grid-cols-3">
             <div v-if="imageName != ''" class="col-span-1 ml-5 mt-3">
-              <div  class="border border-gray-500 text-center bg-red-300 rounded-xl shadow-2xl">
+              <div class="border border-gray-500 text-center bg-red-300 rounded-xl shadow-2xl">
                 <span class="font-bold text-sm italic underline">
                     {{imageName.slice(imageName.lastIndexOf("/") + 1)}} 
                 </span>
