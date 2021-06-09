@@ -8,7 +8,7 @@ const fs = require("fs");
 
 const FILE_DIRECTORY = process.env.FILE_DIRECTORY || "../data";
 const PORT = process.env.PORT || 5000;
-const FILE_PATTERN = new RegExp(`${process.env.PATTERN}`) || new RegExp("(.*).tif.jpg$");
+const FILE_PATTERN = new RegExp(`${process.env.PATTERN}`) || new RegExp("(.*).jpg$");
 
 
 app.use(express.json());
