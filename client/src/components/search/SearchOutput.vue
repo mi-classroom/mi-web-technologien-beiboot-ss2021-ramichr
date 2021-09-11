@@ -3,7 +3,7 @@
         <div v-if="performSearch.length != 0">
             <div class="pl-2 mb-2">
                 <ul v-if="dataResults.length > 0">
-                    <li v-for="index in dataResults.length" class="pt-3 pb-1">
+                    <li v-for="index in dataResults.length" :key="index" class="pt-3 pb-1">
                         <File :fileprops="dataResults[index-1].item" :key="dataResults[index-1].item.path" @file-clicked="fileClicked" />
                     </li>
                 </ul>
@@ -17,66 +17,64 @@
 </template>
 
 <script>
-import Datas from '../directories/Datas.vue'
-import File from '../directories/File.vue'
+import Datas from '../directories/datas.vue'
+import File from '../directories/file.vue'
 import Fuse from 'fuse.js'
+import { getCurrentInstance, ref, watch } from 'vue';
 const searchOptions = {
     includeScore: true,
-    ignoreLocation: true,
+    ignoreLocation: true, 
     keys: ['name']
 }
 
+
 export default {
-name: "searchOutput",
-components: {
-    File,
-    Datas
-},
-data() {
-    return {
-        tree: [],
-        dataSearch: [],
-        dataResults: [],
-        dataList: []
-    }
-},
-props: {
-    performSearch: {
-        type: String
-    }
-},
-watch: {
-    performSearch(input){
-        this.dataResults = this.dataSearch.search(input)
-    }
-},
-methods: {
-    fileClicked(path) {
-        this.$emit("file-clicked", path)
+    name: "SearchOutput",
+    components: {
+        File,
+        Datas
     },
-    getFiles(tree){
-        tree.forEach(element => {
-            if(element.type == "directory"){
-                this.getFiles(element.includes)
-            }
-            else{
-                this.dataList.push(element)
-            }
+    props: { performSearch: String },
+
+    setup(props, context) {
+        const axios = getCurrentInstance().appContext.config.globalProperties.axios;
+        let tree = ref([]);
+        let dataSearch = [];
+        let dataResults =  ref([]);
+        let dataList = [];
+        
+        watch(() => props.performSearch, (input) => {dataResults.value = dataSearch.search(input)});
+
+        function fileClicked(path) {
+            context.emit("file-clicked", path)
+        };
+
+        function getFiles(tree){
+            tree.forEach(element => {
+                if(element.type == "directory"){
+                    getFiles(element.includes)
+                }
+                else{
+                    dataList.push(element)
+                }
+            });
+        };
+
+        axios.get(import.meta.env.VITE_APP_SERVER + "/datas").then((response) => {
+            tree.value = response.data;
+            getFiles(tree.value);
+            dataSearch = new Fuse(dataList, searchOptions);
         });
+
+        return {
+            tree,
+            dataSearch,
+            dataResults,
+            dataList,
+            fileClicked,
+            getFiles
+        }
     },
-},
-created() {
-    this.axios.get(
-        import.meta.env.VITE_APP_SERVER + "/datas")
-        .then((response) => {
-            this.tree = response.data
-            this.getFiles(this.tree)
-            this.dataSearch = new Fuse(this.dataList, searchOptions)
-        })
-}
+
 }
 </script>
-
-<style>
-
-</style>

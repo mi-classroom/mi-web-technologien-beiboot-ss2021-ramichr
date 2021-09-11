@@ -8,7 +8,8 @@ const fs = require("fs");
 
 const FILE_DIRECTORY = process.env.FILE_DIRECTORY || "../data";
 const PORT = process.env.PORT || 5000;
-const FILE_PATTERN = new RegExp(`${process.env.PATTERN}`) || new RegExp("(.*).jpg$");
+const FILE_PATTERN = new RegExp(`${process.env.FILE_PATTERN}`) || new RegExp("(.*).jpg$");
+const JSON_PATTERN = new RegExp(".json$", "i");
 
 
 app.use(express.json());
@@ -30,6 +31,14 @@ app.get("/datas", async (req, res) => {
   res.send(getStructure(FILE_DIRECTORY));
 });
 
+app.post("/json", (req, res) => {
+  let folder = req.body.filepath.substring(0, req.body.filepath.lastIndexOf("/") + 1);
+  let data = JSON.parse(fs.readFileSync(req.body.filepath));
+  res.send({ data, folder });
+});
+
+
+
 function getStructure(initpath) {
   const structure = [];
   const finalpath = fs.readdirSync(initpath, { withFileTypes: true });
@@ -39,7 +48,8 @@ function getStructure(initpath) {
     if (item.isDirectory()) {
       const type = "directory";
       const includes = getStructure(path);
-      structure.push({ name, path, type, includes });
+      const json = searchJson(path);
+      structure.push({ name, path, type, includes, json });
     } else {
       const type = "file";
       if (FILE_PATTERN.test(name)) structure.push({ name, path, type });
@@ -47,6 +57,15 @@ function getStructure(initpath) {
   });
   return structure;
 }
+
+function searchJson(thepath) {
+  try {
+    const found = fs.readdirSync(thepath);
+    const jsonFiles = found.filter((item) => JSON_PATTERN.test(item));
+    if (jsonFiles.length > 0) return thepath + "/" + jsonFiles[jsonFiles.length - 1];
+  } catch (e) {}
+}
+
 
 app.get("/", (req, res) => {
   res.send(

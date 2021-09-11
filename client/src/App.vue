@@ -26,17 +26,18 @@
 
 
       <div class="col-span-3" >
-        <div class="fixed grid h-full grid-cols-3">
+        <div v-if="viewImage" class="fixed grid h-full grid-cols-3">
             <div v-if="imageName != ''" class="col-span-1 ml-5 mt-3">
               <div class="border border-gray-500 text-center bg-red-300 rounded-xl shadow-2xl">
                 <span class="font-bold text-sm italic underline">
                     {{imageName.slice(imageName.lastIndexOf("/") + 1)}} 
                 </span>
-                <ImageView v-if="imageName != ''" class="mr-5 ml-4 mt-2 py-1 pl-1 pb-2 rounded-xl overflow-hidden" :path="imageName"></imageView>
+                <ImageView v-if="viewImage" class="mr-5 ml-4 mt-2 py-1 pl-1 pb-2 rounded-xl overflow-hidden" :path="imageName" />
               </div>          
             </div>
-          <ImageData v-if="imageName != ''" class="col-span-2 text-sm" :path="imageName"></imageData>
+          <ImageData class="col-span-2 text-sm" v-if="viewImage" :path="imageName" />
         </div>
+        <JsonFile class="text-sm" v-if="viewJson" :path="imageName" />
       </div>
     </main>
   </div>
@@ -44,9 +45,13 @@
 
 <script>
 import { SearchIcon } from '@heroicons/vue/outline'
-import ImageView from './components/infos/ImageView.vue'
-import ImageData from './components/infos/ImageData.vue'
-import SearchOutput from './components/search/SearchOutput.vue'
+import { ref } from 'vue'
+import ImageView from './components/infos/imageView.vue'
+import ImageData from './components/infos/imageData.vue'
+import SearchOutput from './components/search/searchOutput.vue'
+import JsonFile from './components/json_datas/jsonFile.vue'
+
+
 
 export default {
   components: {
@@ -54,21 +59,38 @@ export default {
     ImageView,
     ImageData,
     SearchOutput,
+    JsonFile
   },
-  data(){
-    return {
-      imageName: "",
-      query: "",
+
+  setup() {
+    let imageName = ref("");
+    let query = ref("");
+    let pattern = new RegExp("(.*).json$");
+    let viewJson= ref(false);
+    let viewImage = ref(false);
+
+    function fileClicked(path) {
+      imageName.value = path;
+      if (imageName.value != ""){
+        if (pattern.test(imageName.value)){
+          viewImage.value = false;
+          viewJson.value = true;
+        } else {
+          viewImage.value = true;
+          viewJson.value = false;
+        }
+      }
     }
-  },
-  methods:{
-    fileClicked(path){
-      this.imageName = path
-    },
+    return { 
+      imageName,
+      query,  
+      viewJson, 
+      viewImage,
+      fileClicked, 
+    }
   }
+
   }
+
 </script>
 
-<style>
-
-</style>

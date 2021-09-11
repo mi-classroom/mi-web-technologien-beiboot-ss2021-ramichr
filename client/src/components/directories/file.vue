@@ -1,7 +1,7 @@
 <template>
   <button class="inline-block ml-2 text-left" @click="fileClicked" :key="fileprops.path">
-      <PhotographIcon class="inline-block w-5 h-5 mr-4 ml-2 text-yellow-600" />
-      {{ fileprops.name }}
+    <PhotographIcon class="inline-block w-5 h-5 mr-4 ml-2 text-yellow-600" />
+    {{ fileprops.name }}
   </button>
 </template>
 
@@ -9,11 +9,13 @@
   import { PhotographIcon } from '@heroicons/vue/solid'
 
   export default {
-    name: "file",
+    name: "File",
+
     components:
     {
       PhotographIcon
     },
+
     props:
     {
       fileprops:
@@ -22,15 +24,14 @@
         required: true
       },
     },
-    methods:
-    {
-      fileClicked(){
-        this.$emit("file-clicked", this.fileprops.path)
-      }
-    }
+
+    setup(props, context) {
+      function fileClicked(path){
+        context.emit("file-clicked", props.fileprops.path);
+      };
+      return {fileClicked}
+    },
+
   }
 </script>
 
-<style>
-
-</style>

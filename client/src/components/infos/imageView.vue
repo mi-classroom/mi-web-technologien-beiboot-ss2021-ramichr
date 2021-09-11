@@ -9,42 +9,36 @@
 </template>
 
 <script>
-  export default {
-    name: "imageView",
-    data(){
-      return {
-        image: ""
-      }
-    },
-    props:
-    {
-      path:
-      {
-        type: String,
-      }
-    },
-    watch:
-    {
-      path: 'getImage'
-    },
-    methods:
-    {
-      getImage(){
-        this.axios({
-          method: 'post',
-          url: import.meta.env.VITE_APP_SERVER +'/image',
-          data: {filepath: this.path}
-          })
-        .then((response) => {this.image = 'data:image/*;base64,' + response.data});
-      },
-    },
-    created() {
-      this.getImage();
-  }
-  }
 
+import { getCurrentInstance, ref, watch } from "vue";
+
+export default {
+  name: "ImageView",
+
+  props: { path: String },
+
+  setup(props) {
+    const axios = getCurrentInstance().appContext.config.globalProperties.axios;
+    let image = ref("");
+
+    getImage(props.path);
+
+    watch( () => props.path, (p) => {getImage(p)} );
+
+    function getImage(path) {
+      axios({
+        method: 'post',
+        url: import.meta.env.VITE_APP_SERVER +'/image',
+        data: {filepath: path}
+      })
+      .then((response) => {image.value = 'data:image/*;base64,' + response.data});
+    }
+
+    return { 
+      image, 
+      getImage 
+    };
+  },
+}
 </script>
 
-<style>
-
-</style>
