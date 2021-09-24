@@ -2,14 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const exifr = require("exifr");
+
 const fs = require("fs");
+const exiftool = require('node-exiftool')
+const exiftoolBin = require('dist-exiftool')
+const ep = new exiftool.ExiftoolProcess(exiftoolBin)
 
 
-const FILE_DIRECTORY = process.env.FILE_DIRECTORY || "../data";
-const PORT = process.env.PORT || 5000;
-const FILE_PATTERN = new RegExp(`${process.env.FILE_PATTERN}`) || new RegExp("(.*).jpg$");
-const JSON_PATTERN = new RegExp(".json$", "i");
+const FILE_DIRECTORY = "../data";
+const PORT = 5000;
+const FILE_PATTERN = new RegExp(".(jpg|jpeg|.tif.jpg|.json)");
 
 
 app.use(express.json());
@@ -18,8 +20,35 @@ app.use(cors());
 
 app.post("/data", async (req, res) => {
   const filepath = req.body.filepath;
-  exifr.parse(req.body.filepath, true).then((data) => res.send({ filepath, data }));
+  let result;
+  await ep.open()
+          .then(() => ep.readMetadata(filepath, ['-File:all']))
+          .then((res) => result = res.data)
+          .then(() => ep.close())
+
+  let imageData = [];
+  const inputs = [
+          {inputField: "Title", inputName : "Titel"}, 
+          {inputField: "Description", inputName : "Dateiart / Beschreibung"}, 
+          {inputField: "Author", inputName : "Autor / Rechte"},
+          {inputField: "Source", inputName : "Quelle"}]
+
+  inputs.forEach(el => {
+    imageData.push({
+      inputField: el.inputField,
+      inputName: el.inputName,
+      datas: result && result[0][el.inputField] ? result[0][el.inputField] : ""
+    })
+  })
+  res.send({ filepath, imageData });
 });
+
+app.put("/data", async (req, res) => {
+  ep.open()
+    .then(() => ep.writeMetadata(req.body.filepath, {all: '', ...req.body.data}, ["overwrite_original" , "codedcharacterset=utf8"]))
+    .then(() => ep.close())
+    .then(res.status(200).send())
+})
 
 app.post("/image", async (req, res) => {
   const filepath = req.body.filepath;
@@ -38,7 +67,6 @@ app.post("/json", (req, res) => {
 });
 
 
-
 function getStructure(initpath) {
   const structure = [];
   const finalpath = fs.readdirSync(initpath, { withFileTypes: true });
@@ -52,18 +80,17 @@ function getStructure(initpath) {
       structure.push({ name, path, type, includes, json });
     } else {
       const type = "file";
-      if (FILE_PATTERN.test(name)) structure.push({ name, path, type });
+      const extension = name.slice(name.lastIndexOf("."));
+      if (FILE_PATTERN.test(name)) structure.push({ name, path, type, extension });
     }
   });
   return structure;
 }
 
 function searchJson(thepath) {
-  try {
     const found = fs.readdirSync(thepath);
-    const jsonFiles = found.filter((item) => JSON_PATTERN.test(item));
+    const jsonFiles = found.filter((item) => FILE_PATTERN.test(item));
     if (jsonFiles.length > 0) return thepath + "/" + jsonFiles[jsonFiles.length - 1];
-  } catch (e) {}
 }
 
 

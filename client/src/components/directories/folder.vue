@@ -4,9 +4,6 @@
       <FolderIcon class="inline-block w-5 h-5 mx-2 text-blue-500"/>
       {{ folderprops.name }}
     </button>
-    <button class="mt-2" v-if="folderprops.json" @click= fileClicked(folderprops.json)>
-      <DatabaseIcon class="inline-block w-5 h-5 ml-2 text-green-500" />
-    </button>
     <ul>
       <li v-for="item in folderprops.includes" :key="item" class="pt-2" :class="{ hidden : !active }">
         <File v-if="item.type == 'file'"  :fileprops="item" :key="item.path" @file-clicked= fileClicked />
@@ -18,7 +15,7 @@
 
 <script>
 import File from "./file.vue";
-import { FolderIcon, DatabaseIcon } from '@heroicons/vue/solid'
+import { FolderIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue';
 
 export default {
@@ -27,8 +24,7 @@ export default {
   components:
   {
     File,
-    FolderIcon,
-    DatabaseIcon
+    FolderIcon
   },
 
   props:

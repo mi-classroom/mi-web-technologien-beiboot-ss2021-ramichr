@@ -28,11 +28,11 @@ export default {
     props: {
             description: [String, Number],
             value: [String, Number, Object],            
-            open: String,
+            open: Boolean,
     },
 
     setup(props) {
-        let active = ref(props.open == "true");
+        let active = ref(props.open == false);
         return {
             props,
             active
