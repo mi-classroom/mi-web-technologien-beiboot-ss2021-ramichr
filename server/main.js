@@ -7,16 +7,17 @@ const fs = require("fs");
 const exiftool = require('node-exiftool')
 const exiftoolBin = require('dist-exiftool')
 const ep = new exiftool.ExiftoolProcess(exiftoolBin)
-
+const archiver = require("archiver");
 
 const FILE_DIRECTORY = "../data";
 const PORT = 5000;
-const FILE_PATTERN = new RegExp(".(jpg|jpeg|.tif.jpg|.json)");
+const FILE_PATTERN = new RegExp(".(jpg|jpeg|json)");
 
 
 app.use(express.json());
 app.use(cors());
 
+/* ----------------------------------------------------------------------- */
 
 app.post("/data", async (req, res) => {
   const filepath = req.body.filepath;
@@ -56,16 +57,11 @@ app.post("/image", async (req, res) => {
   res.send(image64);
 });
 
+/* ----------------------------------------------------------------------- */
+
 app.get("/datas", async (req, res) => {
   res.send(getStructure(FILE_DIRECTORY));
 });
-
-app.post("/json", (req, res) => {
-  let folder = req.body.filepath.substring(0, req.body.filepath.lastIndexOf("/") + 1);
-  let data = JSON.parse(fs.readFileSync(req.body.filepath));
-  res.send({ data, folder });
-});
-
 
 function getStructure(initpath) {
   const structure = [];
@@ -87,11 +83,42 @@ function getStructure(initpath) {
   return structure;
 }
 
+
+/* ----------------------------------------------------------------------- */
+
+
+app.post("/json", (req, res) => {
+  let folder = req.body.filepath.substring(0, req.body.filepath.lastIndexOf("/") + 1);
+  let data = JSON.parse(fs.readFileSync(req.body.filepath));
+  res.send({ data, folder });
+});
+
 function searchJson(thepath) {
-    const found = fs.readdirSync(thepath);
-    const jsonFiles = found.filter((item) => FILE_PATTERN.test(item));
-    if (jsonFiles.length > 0) return thepath + "/" + jsonFiles[jsonFiles.length - 1];
+  const found = fs.readdirSync(thepath);
+  const jsonFiles = found.filter((item) => FILE_PATTERN.test(item));
+  if (jsonFiles.length > 0) return thepath + "/" + jsonFiles[jsonFiles.length - 1];
 }
+
+
+/* ----------------------------------------------------------------------- */
+
+
+app.post("/download-zip-files", async (req, res) =>{
+  const archive = archiver("zip", { zlib: { level: 9 } });
+  const stream = fs.createWriteStream("./download/directory.zip");
+  await new Promise((resolve, reject) => {
+    archive
+      .directory(req.body.filepath, false)
+      .on("error", (err) => reject(err))
+      .pipe(stream);
+    stream.on("close", () => resolve());
+    archive.finalize();
+  });
+  res.download("./download/directory.zip");
+});
+
+
+/* ----------------------------------------------------------------------- */
 
 
 app.get("/", (req, res) => {
