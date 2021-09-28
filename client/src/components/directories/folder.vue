@@ -1,14 +1,17 @@
 <template>
-  <div class="inline-block ml-2">
-    <button @click="active = !active">
-      <FolderIcon class="inline-block w-5 h-5 mx-2 text-blue-500"/>
-      {{ folderprops.name }}
-    </button>
-    <button @click.prevent="downloadFiles(folderprops)">
-      <DownloadIcon class="inline-block w-5 h-5 ml-4 text-green-500" />
-    </button>
+  <div>
+    <div class="flex ml-4">
+      <button @click="active = !active" class="flex">
+        <span class="text-accent material-icons">folder_open</span>
+        <span class="pl-3">{{ folderprops.name }}</span>
+      </button>
+      <button @click.prevent="downloadFiles(folderprops)">
+        <span class="ml-3 material-icons">download</span>
+      </button>
+    </div>
+
     <ul>
-      <li v-for="item in folderprops.includes" :key="item" class="pt-2" :class="{ hidden : !active }">
+      <li v-for="item in folderprops.includes" :key="item" class="pt-2 ml-5 border-l border-dotted" :class="{ hidden : !active }">
         <File v-if="item.type == 'file'"  :fileprops="item" :key="item.path" @file-clicked= fileClicked />
         <Folder v-else :folderprops="item" :key="item.path" @file-clicked= fileClicked />
       </li>
@@ -18,7 +21,6 @@
 
 <script>
 import File from "./file.vue";
-import { FolderIcon, DownloadIcon } from '@heroicons/vue/solid'
 import { getCurrentInstance } from "@vue/runtime-core";
 import { ref } from "vue";
 
@@ -28,8 +30,6 @@ export default {
   components:
   {
     File,
-    FolderIcon,
-    DownloadIcon
   },
 
   props:

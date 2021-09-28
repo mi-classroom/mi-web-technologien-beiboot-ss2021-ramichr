@@ -3,11 +3,11 @@
         <div v-if="performSearch.length != 0">
             <div class="pl-2 mb-2">
                 <ul v-if="dataResults.length > 0">
-                    <li v-for="index in dataResults.length" :key="index" class="pt-3 pb-1">
+                    <li v-for="index in dataResults.length" :key="index" class="pb-1">
                         <File :fileprops="dataResults[index-1].item" :key="dataResults[index-1].item.path" @file-clicked="fileClicked" />
                     </li>
                 </ul>
-                <div v-if="dataResults.length == 0" class="pt-3 pb-1 ml-3">
+                <div v-if="dataResults.length == 0" class="pb-1 ml-3">
                     No Results for "<strong>{{performSearch}}</strong>"
                 </div>
             </div>

@@ -1,14 +1,10 @@
 <template>
     <div>
-        <div class="px-5 mt-3">
-            <div class="border border-gray-500 rounded-xl overflow-hidden shadow-2xl">
-                <ul v-if="jsonFile.data" class="px-8 py-1 bg-green-100 text-blue-800">
-                    <li v-for="(item, key, index) in jsonFile.data.imageStack" :key="index">
-                        <JsonView :value="item" :description="key" :open="true" />
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <ul v-if="jsonFile.data">
+            <li v-for="(item, key, index) in jsonFile.data" :key="index">
+                <JsonView :value="item" :description="key" :open="true"  class="font-mono"/>
+            </li>
+        </ul>
     </div>
 </template>
 

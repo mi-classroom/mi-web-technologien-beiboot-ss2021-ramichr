@@ -1,22 +1,20 @@
 <template>
-    <div>
-        <div class="p-1">
-            <div v-if="typeof value === 'object'">
-                <button class="flex items-center font-bold" @click="active= !active">
-                "{{ description }}"<span>: {</span>
-                </button>
-                <ul v-if="active" class="pl-1 text-red-700" :class="{ 'ml-4': active }">
-                    <li v-for="(item, key, index) in value" :key="index">
-                        <JsonView :value="item" :description="key" open="false" />
-                    </li>
-                </ul>
-                <span class="font-bold pl-2">}</span>
-            </div>
+    <div class="p-2">
+        <div v-if="typeof value === 'object'">
+            <button class="flex" @click="active= !active">
+            "{{ description }}"<span>: {</span>
+            </button>
+            <ul v-if="active" class="border-l border-dotted" :class="{ 'ml-3': active }">
+                <li v-for="(item, key, index) in value" :key="index" class="ml-4">
+                    <JsonView :value="item" :description="key" open="false" />
+                </li>
+            </ul>
+            <span class="pl-2">}</span>
+        </div>
 
-            <div v-else class="flex ml-4 text-green-700">
-                <span class="font-bold">{{ description }}:</span>
-                <span class="ml-5">{{ value }}</span>
-            </div>
+        <div v-else class="flex ml-4">
+            <span class="text-light font-semibold">"{{ description }}" : </span>
+            <span class="ml-5 text-lightest">{{ value }}</span>
         </div>
     </div>
 </template>
@@ -32,7 +30,7 @@ export default {
     },
 
     setup(props) {
-        let active = ref(props.open == false);
+        let active = ref(props.open == true);
         return {
             props,
             active

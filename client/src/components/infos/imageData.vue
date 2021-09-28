@@ -1,37 +1,31 @@
 <template>
-  <div class="px-5 mt-3">
-    <div class="border border-gray-500 bg-blue-100 rounded-xl overflow-hidden shadow-2xl">
-      <div v-if="editActivated == false">
-        <div class="p-4" v-for="(item, index) in imageData" :key="index">
-          <li class="font-bold">{{item.inputName}} : </li> <br>
-          <span class="pl-5"> {{item.datas}} </span>
+  <div class="bg-dark px-4 py-6">
+    <div>
+      <div class="text-lighter">
+        <span class="material-icons">crop_16_9</span>
+        <span class="ml-2 align-top">Größe: 50 x 50 </span>
+      </div>
+      <button @click.prevent="editActivated = !editActivated">
+        <span class="text-accent material-icons">list</span>
+        <span class="text-lighter ml-2 align-top">IPTC: -</span>
+      </button>
+    </div>
+    <div v-if="editActivated == true">
+      <form v-if="imageData.length">
+        <div v-for="(item, index) in imageData" :key="index">
+          <EditImageData
+            :inputName="item.inputName"              
+            :inputField="item.inputField"
+            :datas="item.datas"
+            @change-value="submitNewDatas"
+          />
         </div>
-        <div class="grid grid-cols-1">
-          <button class="col-span-1 text-center p-5" type="button" @click="editActivated = true">
-            <PencilAltIcon class="inline-block w-8 h-8 text-blue-500" />
+          <button class="bg-accent text-darkest px-4 py-2 rounded-md"
+                  type="submit" @click.prevent="saveDatas()">
+            <span class="mr-2 inline material-icons">save</span>
+            <span class="align-top">Speichern</span>
           </button>
-        </div>
-      </div>
-      <div v-else>
-        <form v-if="imageData.length">
-          <div v-for="(item, index) in imageData" :key="index">
-            <EditImageData
-              :inputName="item.inputName"              
-              :inputField="item.inputField"
-              :datas="item.datas"
-              @change-value="submitNewDatas"
-            />
-          </div>
-          <div class="grid grid-cols-2">
-            <button class="col-span-1 text-center p-5" type="submit" @click.prevent="saveDatas() && (editActivated = false)">
-              <CheckIcon class="inline-block w-8 h-8 text-green-500" />
-            </button>
-            <button class="col-span-1 text-center p-5" type="button" @click.prevent="editActivated = false">
-              <XIcon class="inline-block w-8 h-8 text-red-500" />
-            </button>
-          </div>
-        </form>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -39,8 +33,6 @@
 <script>
 import { getCurrentInstance } from "@vue/runtime-core";
 import { ref, watch } from "vue";
-import {PencilAltIcon, CheckIcon, XIcon} from "@heroicons/vue/solid"
-
 import EditImageData from "./editImageData.vue";
 
 export default {
@@ -51,9 +43,6 @@ export default {
   },
   components: {
     EditImageData,
-    CheckIcon,
-    PencilAltIcon,
-    XIcon
   },
   setup(props) {
     const axios = getCurrentInstance().appContext.config.globalProperties.axios;

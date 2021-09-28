@@ -1,29 +1,28 @@
 <template>
-  <div v-if="fileprops.extension == '.json'">
-    <button class="inline-block ml-2 text-left" @click="fileClicked" :key="fileprops.path">
-      <CodeIcon class="inline-block w-5 h-5 mr-4 ml-2 text-red-600" />
-      {{ fileprops.name }}
-    </button>
+  <div class="flex">
+    <div v-if="fileprops.extension == '.json'">
+      <button class="flex ml-4" @click="fileClicked" :key="fileprops.path">
+        <span class="text-accent material-icons">data_object</span>
+        <span class="ml-3 text-left">{{ fileprops.name }}</span>
+      </button>
+    </div>
+    <div v-else>
+      <button class="flex ml-4" @click="fileClicked" :key="fileprops.path">
+        <span class="text-accent material-icons">image</span>
+        <span class="ml-3">{{ fileprops.name }}</span>
+      </button>
+    </div>
   </div>
-  <div v-else>
-    <button class="inline-block ml-2 text-left" @click="fileClicked" :key="fileprops.path">
-      <PhotographIcon class="inline-block w-5 h-5 mr-4 ml-2 text-yellow-600" />
-      {{ fileprops.name }}
-    </button>
-  </div>
+
 </template>
 
 <script>
-  import { PhotographIcon, CodeIcon } from '@heroicons/vue/solid'
 
   export default {
     name: "File",
 
     components:
-    {
-      PhotographIcon,
-      CodeIcon
-    },
+    {},
 
     props:
     {

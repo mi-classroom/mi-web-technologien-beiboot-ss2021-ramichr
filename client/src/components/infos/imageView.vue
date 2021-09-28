@@ -1,8 +1,8 @@
 <template>
   <div>
     <div>
-      <div class="rounded-xl overflow-hidden">
-        <img :src="image" />
+      <div class="flex flex-col items-center px-4">
+        <img :src="image" class="h-screen"/>
       </div>
     </div>
   </div>
