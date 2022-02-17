@@ -1,8 +1,8 @@
-# Web Technologien // begleitendes Projekt Sommersemester 2021
+# Web Technologies // accompanying project summer semester 2021
 
-Zum Modul Web Technologien gibt es ein begleitendes Projekt. Im Rahmen dieses Projekts werden wir von Veranstaltung zu Veranstaltung ein Projekt sukzessive weiter entwickeln und uns im Rahmen der Veranstaltung den Fortschritt anschauen, Code Reviews machen und Entwicklungsschritte vorstellen und diskutieren.
+There is an accompanying project for the Web Technologies module. As part of this project, we will successively develop a project from event to event and look at the progress, do code reviews and present and discuss development steps as part of the event.
 
-Als organisatorischen Rahmen für das Projekt nutzen wir GitHub Classroom. Inhaltlich befassen wir uns mit der Entwicklung einer kleinen Web-Anwendung für die Bearbeitung von Bildern. Hierbei steht weniger ein professioneller Konzeptions-, Entwurfs- und Entwicklungsprozess im Vordergrund, sondern vielmehr die sukzessive Weiterentwicklung einer Anwendung, das Ausprobieren, Vergleichen, Refactoren und die Freude an lauffähigem Code.
+We will use GitHub Classroom as the organizational framework for the project. In terms of content, we are looking at developing a small web application for editing images. The focus here is less on a professional conception, design and development process, but rather on successively developing an application, trying it out, comparing, refactoring and enjoying executable code.
 
 <br>
 <br>
